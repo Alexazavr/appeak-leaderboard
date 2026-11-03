@@ -120,10 +120,6 @@
         </div>
         <label class="toggle"><input type="checkbox" id="loop"> Авто-луп (туда-обратно каждые 2.4с)</label>
       </div>
-      <div class="card">
-        <h3>Как ложится на Flutter</h3>
-        <p class="hint" id="maphint"></p>
-      </div>
     </div>
   </div>
 
@@ -224,18 +220,10 @@ async function go(to,dir){
 }
 function replay(){ if(busy)return; busy=true; buildRows(tab); animateIn(tab===1?1:-1); setTimeout(()=>busy=false,120); }
 
-const MAP={
-  deal:'Card Deal → <b>AnimationController</b> + <b>Transform</b> (translate/rotate/scale) на каждой строке, stagger через Interval. Переиспользует логику вашего <b>DealingAnimationOverlay</b> / <b>FlipCard</b>. Исходящие строки — обратный stagger.',
-  shimmer:'Shimmer Reveal → ваш <b>ShimmerSweep</b> / <b>RenderScopedShimmerBox</b> + <b>ShaderMask</b> с бегущим градиентом; строки «загораются» через ColorFilter/opacity по задержке от позиции луча. Прямое продолжение skeleton-shimmer из loading-стейта.',
-  flip:'Scoreboard Flip → <b>FlipCard</b> / <b>RevealFlip</b> (rotateX через Matrix4) на каждой строке со stagger. Ощущение обновляющегося табло. На длинных списках ограничить видимой областью.',
-  slide:'Slide + Stagger → <b>AnimatedSwitcher</b> + <b>SlideTransition</b> для контейнера и staggered Fade/Slide для строк. Самый дешёвый и безопасный — хорош как дефолт/фолбэк.'
-};
-function setMap(){ document.getElementById('maphint').innerHTML=MAP[variant]; }
-
 document.getElementById('vbtns').addEventListener('click',e=>{
   const b=e.target.closest('.vbtn'); if(!b)return;
   [...document.querySelectorAll('.vbtn')].forEach(x=>x.classList.remove('act'));
-  b.classList.add('act'); variant=b.dataset.v; setMap(); replay();
+  b.classList.add('act'); variant=b.dataset.v; replay();
 });
 document.getElementById('next').onclick=()=>go(1,1);
 document.getElementById('prev').onclick=()=>go(0,-1);
@@ -252,7 +240,7 @@ screen.addEventListener('pointerup',e=>{ if(!sw)return; sw=false; const dx=e.cli
   if(Math.abs(dx)<40)return; if(dx<0&&tab===0)go(1,1); if(dx>0&&tab===1)go(0,-1); });
 window.addEventListener('keydown',e=>{ if(e.key==='ArrowRight'&&tab===0)go(1,1); if(e.key==='ArrowLeft'&&tab===1)go(0,-1); });
 
-setChrome(0); buildRows(0); setMap();
+setChrome(0); buildRows(0);
 requestAnimationFrame(()=>animateIn(1));
 </script>
 </body>
